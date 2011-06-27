@@ -31,7 +31,7 @@ echo $CURPATH
 # rsync -rv $LOCALDIR $REMOTEDIR
 
 echo -ne "Running initial sync... "
-# unison default $LOCALDIR $REMOTEDIR -batch -silent -auto -ui text -perms 0 >/dev/null 2>&1
+unison default $LOCALDIR $REMOTEDIR -batch -silent -auto -ui text -perms 0 >/dev/null 2>&1
 # unison default $LOCALDIR $REMOTEDIR -batch -auto -ui text -perms 0
 echo "done"
 
