@@ -4,3 +4,5 @@ Directory Syncing Thing
 A simple script that uses inotify to "sync" files quickly when they change from one directory to another.
 
 Released under the MIT license which is included at the top of the script.
+
+Requires inotify and unison probably.
