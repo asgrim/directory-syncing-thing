@@ -1,8 +1,21 @@
 Directory Syncing Thing
 =================================================
-
 A simple script that uses inotify to "sync" files quickly when they change from one directory to another.
+
+NOTE: This only does ONE-way synchronisation.
 
 Released under the MIT license which is included at the top of the script.
 
+Requirements
+=================================================
 Requires inotify and unison probably.
+
+Usage
+=================================================
+watch_folders.sh [LOCALDIR] [REMOTEDIR] [NAME]
+
+Uses inotify to watch [LOCALDIR] for changes and push them up to [REMOTEDIR].
+
+e.g.
+chmod +x watch_folders.sh
+./watch_folders.sh /home/user/localdir /mnt/remote/remotedir whatever
