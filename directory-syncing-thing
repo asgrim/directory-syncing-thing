@@ -18,7 +18,7 @@
 source ./directory-syncing-thing.conf
 
 # Don't need to change anything below here hopefully
-LOGFILE=$DSTBASEDIR/sync.log
+LOGSDIR=$DSTBASEDIR/logs/
 LOCKFILE=$DSTBASEDIR/sync.lock
 PIDSDIR=$DSTBASEDIR/pids/
 
@@ -39,15 +39,15 @@ do_start() {
   # Create lockfile
   touch $LOCKFILE
 
-  # Truncate logfile
-  :>$LOGFILE
-
   # Loop through specified watches
   for WATCHID in ${!WATCHDIRS_N[*]}
   do
     iNAME=${WATCHDIRS_N[$WATCHID]}
     iLOCAL=${WATCHDIRS_L[$WATCHID]}
     iREMOTE=${WATCHDIRS_R[$WATCHID]}
+
+    $LOGFILE=$LOGSDIR/$iNAME.log
+    :>$LOGFILE
 
     (./watch_folder.sh $iLOCAL $iREMOTE $iNAME >> $LOGFILE 2>&1) &
     MY_PPID=$!
