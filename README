@@ -1,6 +1,8 @@
 Directory Syncing Thing
 =================================================
 A simple script that uses inotify to "sync" files quickly when they change from one directory to another.
+Note this is very early in development and was a tool just for me - if others find a use for it, it would be ace if you could contribute back! :)
+Don't use on production sites etc. as it's not very tested at all.
 
 NOTE: This only does ONE-way synchronisation.
 
@@ -12,10 +14,22 @@ Requires inotify and unison probably.
 
 Usage
 =================================================
-watch_folders.sh [LOCALDIR] [REMOTEDIR] [NAME]
+1. Copy directory-syncing-thing.conf.example to directory-syncing-thing.conf
+2. Modify the config to your needs, you can "watch" as many directories as you need
+3. At the moment, init.d script isn't tested so for now to start manually:
 
-Uses inotify to watch [LOCALDIR] for changes and push them up to [REMOTEDIR].
+    ./directory-syncing-thing start
 
-e.g.
-chmod +x watch_folders.sh
-./watch_folders.sh /home/user/localdir /mnt/remote/remotedir whatever
+4. To stop
+
+    ./directory-syncing-thing stop
+
+5. THIS IS NOT FULLY TESTED. COMES WITHOUT WARRANTY etc. etc. DO NOT USE ON PRODUCTION STUFF etc. etc.
+
+     -= YOU HAVE BEEN WARNED =-
+
+TODO
+=================================================
+* Test the init.d script to see if it actually works as an init.d script
+* Do a check to see if the remote volume is mounted first
+* Improve the way the config works, it's ugly and difficult to understand
