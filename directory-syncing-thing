@@ -61,7 +61,7 @@ do_start() {
 do_stop() {
    for WATCHID in ${!WATCHDIRS_N[*]}
    do
-     echo "Stopping ${WATCHDIRS_N[$WATCHID]}..."
+     echo -ne "Stopping ${WATCHDIRS_N[$WATCHID]}... "
      PIDFILE=$PIDSDIR/$WATCHID.pid
      if [ -f $PIDFILE ]
      then
@@ -69,11 +69,9 @@ do_stop() {
  
        for i in `ps -ef | awk '$3 == '${MY_PPID}' { print $2 }'`
        do
-         echo killing $i
          kill -9 $i
        done
   
-       echo killing $MY_PPID
        kill -9 $MY_PPID
        rm -f $PIDFILE
        echo "done."
