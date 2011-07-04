@@ -1,0 +1,118 @@
+#!/bin/bash -e
+### BEGIN INIT INFO
+# Provides:          directory-syncing-thing
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/stop directory syncing thing if mounted
+### END INIT INFO
+
+#
+# Copyright (C) 2011 James Titcumb 
+#
+# See LICENSE file for license!     
+#
+
+# Configure OUR options
+DSTBASEDIR=/home/james/NetbasicFiles
+
+source $DSTBASEDIR/directory-syncing-thing.conf
+
+# Don't need to change anything below here hopefully
+LOGFILE=$DSTBASEDIR/sync.log
+LOCKFILE=$DSTBASEDIR/sync.lock
+PIDSDIR=$DSTBASEDIR/pids/
+
+# PATH=/sbin:/usr/sbin:/bin:/usr/bin
+# KERNEL="$(uname -s)"
+# RELEASE="$(uname -r)"
+# . /lib/init/vars.sh
+# . /lib/lsb/init-functions
+
+do_start() {
+  # Check if lockfile exists
+  if [ -f $LOCKFILE ];
+  then
+    echo "Already running..." >&2
+    exit 3
+  fi
+
+  # Create lockfile
+  touch $LOCKFILE
+
+  # Truncate logfile
+  :>$LOGFILE
+
+  # Loop through specified watches
+  for WATCHID in ${!WATCHDIRS_N[*]}
+  do
+    iNAME=${WATCHDIRS_N[$WATCHID]}
+    iLOCAL=${WATCHDIRS_L[$WATCHID]}
+    iREMOTE=${WATCHDIRS_R[$WATCHID]}
+
+    (./watch_folder.sh $iLOCAL $iREMOTE $iNAME >> $LOGFILE 2>&1) &
+    MY_PPID=$!
+
+    echo "Started watching $iNAME."
+
+    echo $MY_PPID > $PIDSDIR/$WATCHID.pid
+  done
+}
+
+do_stop() {
+#  killall watch_folder.sh
+#  killall inotifywait
+
+#  rm /home/james/NetbasicFiles/sync.lock
+
+
+   for WATCHID in ${!WATCHDIRS_N[*]}
+   do
+     echo "Stopping ${WATCHDIRS_N[$WATCHID]}..."
+     PIDFILE=$PIDSDIR/$WATCHID.pid
+     if [ -f $PIDFILE ]
+     then
+       MY_PPID=`cat $PIDFILE`
+ 
+       for i in `ps -ef | awk '$3 == '${MY_PPID}' { print $2 }'`
+       do
+         echo killing $i
+         kill -9 $i
+       done
+  
+       echo killing $MY_PPID
+       kill -9 $MY_PPID
+       rm -f $PIDFILE
+       echo "done."
+     else
+       echo "not running."
+     fi
+   done
+
+   if [ -f $LOCKFILE ]
+   then
+     rm $LOCKFILE
+   else
+     echo "Doesn't look like I was running..."
+   fi
+}
+
+case "$1" in
+  start)
+    do_start
+    ;;
+  stop)
+    do_stop
+    ;;
+  restart|reload|force-reload)
+    do_stop
+    do_start
+    ;;
+  *)
+    echo "Usage: directory-syncing-thing.sh [start|stop|restart]" >&2
+    exit 3
+    ;;
+esac
+
+:

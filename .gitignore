@@ -1,0 +1,5 @@
+directory-syncing-thing.conf
+pids
+sync.lock
+sync.log
+
