@@ -15,9 +15,7 @@
 #
 
 # Configure OUR options
-DSTBASEDIR=/home/james/NetbasicFiles
-
-source $DSTBASEDIR/directory-syncing-thing.conf
+source ./directory-syncing-thing.conf
 
 # Don't need to change anything below here hopefully
 LOGFILE=$DSTBASEDIR/sync.log
@@ -61,12 +59,6 @@ do_start() {
 }
 
 do_stop() {
-#  killall watch_folder.sh
-#  killall inotifywait
-
-#  rm /home/james/NetbasicFiles/sync.lock
-
-
    for WATCHID in ${!WATCHDIRS_N[*]}
    do
      echo "Stopping ${WATCHDIRS_N[$WATCHID]}..."

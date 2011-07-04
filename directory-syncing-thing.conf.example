@@ -1,3 +1,4 @@
+DSTBASEDIR=/path/to/local/dir/and/scripts/etc
 DSTREMOTEDIR=/path/to/remote/dir
 
 WATCHDIRS_L[0]=$DSTBASEDIR/localdir1
