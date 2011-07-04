@@ -18,9 +18,9 @@
 source ./directory-syncing-thing.conf
 
 # Don't need to change anything below here hopefully
-LOGSDIR=$DSTBASEDIR/logs/
+LOGSDIR=$DSTBASEDIR/logs
 LOCKFILE=$DSTBASEDIR/sync.lock
-PIDSDIR=$DSTBASEDIR/pids/
+PIDSDIR=$DSTBASEDIR/pids
 
 # PATH=/sbin:/usr/sbin:/bin:/usr/bin
 # KERNEL="$(uname -s)"
@@ -46,7 +46,7 @@ do_start() {
     iLOCAL=${WATCHDIRS_L[$WATCHID]}
     iREMOTE=${WATCHDIRS_R[$WATCHID]}
 
-    $LOGFILE=$LOGSDIR/$iNAME.log
+    LOGFILE=$LOGSDIR/$iNAME.log
     :>$LOGFILE
 
     (./watch_folder.sh $iLOCAL $iREMOTE $iNAME >> $LOGFILE 2>&1) &
