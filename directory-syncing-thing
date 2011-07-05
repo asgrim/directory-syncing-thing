@@ -1,11 +1,11 @@
 #!/bin/bash -e
 ### BEGIN INIT INFO
 # Provides:          directory-syncing-thing
-# Required-Start:    
-# Required-Stop:     
+# Required-Start:    $remote_fs $all
+# Required-Stop:     $remote_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start/stop directory syncing thing if mounted
+# Short-Description: Start/stop directory syncing thing
 ### END INIT INFO
 
 #
@@ -31,19 +31,22 @@ source /etc/directory-syncing-thing.conf
 LOGSDIR=$INSTALLDIR/logs
 LOCKFILE=$INSTALLDIR/sync.lock
 PIDSDIR=$INSTALLDIR/pids
+MASTERLOG=$INSTALLDIR/logs/master.log
 
-# PATH=/sbin:/usr/sbin:/bin:/usr/bin
-# KERNEL="$(uname -s)"
-# RELEASE="$(uname -r)"
-# . /lib/init/vars.sh
-# . /lib/lsb/init-functions
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+DESC="Directory Syncing Thing"
+NAME=directory-syncing-thing
+SCRIPTNAME=/etc/init.d/$NAME
+KERNEL="$(uname -s)"
+RELEASE="$(uname -r)"
+. /lib/init/vars.sh
+. /lib/lsb/init-functions
 
 do_start() {
   # Check if lockfile exists
   if [ -f $LOCKFILE ];
   then
-    echo "Already running..." >&2
-    exit 3
+    return 3
   fi
 
   # Create lockfile
@@ -62,16 +65,18 @@ do_start() {
     ($INSTALLDIR/watch_folder.sh $iLOCAL $iREMOTE $iNAME >> $LOGFILE 2>&1) &
     MY_PPID=$!
 
-    echo "Started watching $iNAME."
+    echo "Started watching $iNAME." >> $MASTERLOG
 
     echo $MY_PPID > $PIDSDIR/$WATCHID.pid
   done
+
+  return 0
 }
 
 do_stop() {
    for WATCHID in ${!WATCHDIRS_N[*]}
    do
-     echo -ne "Stopping ${WATCHDIRS_N[$WATCHID]}... "
+     echo -ne "Stopping ${WATCHDIRS_N[$WATCHID]}... " >> $MASTERLOG
      PIDFILE=$PIDSDIR/$WATCHID.pid
      if [ -f $PIDFILE ]
      then
@@ -84,9 +89,9 @@ do_stop() {
   
        kill -9 $MY_PPID
        rm -f $PIDFILE
-       echo "done."
+       echo "done." >> $MASTERLOG
      else
-       echo "not running."
+       echo "not running." >> $MASTERLOG
      fi
    done
 
@@ -94,23 +99,47 @@ do_stop() {
    then
      rm $LOCKFILE
    else
-     echo "Doesn't look like I was running..."
+     echo "Doesn't look like I was running..." >> $MASTERLOG
+     return 3
    fi
+
+   return 0
 }
 
 case "$1" in
   start)
+    echo -n "Starting $DESC $NAME"
     do_start
+    case "$?" in
+      0) log_success_msg ;;
+      *) log_failure_msg ;;
+    esac
     ;;
   stop)
+    echo -n "Stopping $DESC $NAME"
     do_stop
+    case "$?" in
+      0) log_success_msg ;;
+      *) log_failure_msg ;;
+    esac
     ;;
   restart|reload|force-reload)
+    echo -n "Restarting $DESC $NAME"
     do_stop
-    do_start
+    case "$?" in
+      0)
+        sleep 1
+        do_start
+        case "$?" in
+          0) log_success_msg ;;
+          *) log_failure_msg ;;
+        esac
+      ;;
+      *) log_failure_message ;;
+    esac
     ;;
   *)
-    echo "Usage: directory-syncing-thing.sh [start|stop|restart]" >&2
+    log_warning_msg "Usage: $SCRIPTNAME [start|stop|restart|force-reload]" >&2
     exit 3
     ;;
 esac
