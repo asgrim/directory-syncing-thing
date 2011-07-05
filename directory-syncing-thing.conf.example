@@ -1,11 +1,27 @@
-DSTBASEDIR=/path/to/local/dir/and/scripts/etc
-DSTREMOTEDIR=/path/to/remote/dir
+#
+# Copyright (C) 2011 James Titcumb
+#
+# See LICENSE file for license!
+#
+#
+# The config file must have 3 BASH-format arrays
+#   $WATCHDIRS_L is an array of the "local" directories (i.e the one(s) being watched)
+#   $WATCHDIRS_R is an array of the "remote" directories (i.e the one(s) changes will be copied to)
+#   $WATCHDIRS_N is an array of "names" or identifiers for the watches (for logs and the scripts to name them etc.)
+#
+# At the moment if you change the number of entries in the array WHILST the script is running
+# It will probably not close everything properly so you'll be screwed.
+# 
 
-WATCHDIRS_L[0]=$DSTBASEDIR/localdir1
-WATCHDIRS_L[1]=$DSTBASEDIR/localdir2
+# These LOCALDIR and REMOTEDIR do not have to be defined but are useful to stop repeating below
+LOCALDIR=/path/to/local/dir/and/scripts/etc
+REMOTEDIR=/path/to/remote/dir
 
-WATCHDIRS_R[0]=$DSTREMOTEDIR/remotedir1
-WATCHDIRS_R[1]=$DSTREMOTEDIR/remotedir2
+WATCHDIRS_L[0]=$LOCALDIR/localdir1
+WATCHDIRS_L[1]=$LOCALDIR/localdir2
+
+WATCHDIRS_R[0]=$REMOTEDIR/remotedir1
+WATCHDIRS_R[1]=$REMOTEDIR/remotedir2
 
 WATCHDIRS_N[0]=name1
 WATCHDIRS_N[1]=name2
