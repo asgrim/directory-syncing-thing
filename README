@@ -21,21 +21,19 @@ Installation
 4. chmod +x install.sh
 5. sudo ./install.sh
 6. EDIT THE CONFIG FILE FIRST!!!
-6. /etc/init.d/directory-syncing-thing start
+7. /etc/init.d/directory-syncing-thing start
 
 Usage
 =================================================
-1. Copy directory-syncing-thing.conf.example to directory-syncing-thing.conf
-2. Modify the config to your needs, you can "watch" as many directories as you need
-3. At the moment, init.d script isn't tested so for now to start manually:
+1. At the moment, init.d script isn't tested so for now to start manually:
 
-    ./directory-syncing-thing start
+    /etc/init.d/directory-syncing-thing start
 
-4. To stop
+2. To stop
 
-    ./directory-syncing-thing stop
+    /etc/init.d/directory-syncing-thing stop
 
-5. THIS IS NOT FULLY TESTED. COMES WITHOUT WARRANTY etc. etc. DO NOT USE ON PRODUCTION STUFF etc. etc.
+3. THIS IS NOT FULLY TESTED. COMES WITHOUT WARRANTY etc. etc. DO NOT USE ON PRODUCTION STUFF etc. etc.
 
      -= YOU HAVE BEEN WARNED =-
 
