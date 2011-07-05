@@ -11,6 +11,17 @@ Released under the MIT license which is included at the top of the script.
 Requirements
 =================================================
 Requires inotify and unison probably.
+This is currently made on Ubuntu and might/probably won't work on any other distro, I don't know really. YMMV.
+
+Installation
+=================================================
+1. apt-get install inotify-tools unison-gtk
+2. cd /opt
+3. git clone git://github.com/Asgrim/Directory-Syncing-Thing.git directory-syncing-thing
+4. chmod +x install.sh
+5. sudo ./install.sh
+6. EDIT THE CONFIG FILE FIRST!!!
+6. /etc/init.d/directory-syncing-thing start
 
 Usage
 =================================================
@@ -33,3 +44,5 @@ TODO
 * Test the init.d script to see if it actually works as an init.d script
 * Do a check to see if the remote volume is mounted first
 * Improve the way the config works, it's ugly and difficult to understand
+* Enable changing configs WHILST script is running so it doesn't bork things
+* Could we use the PGID (process group ID) to kill all the child processes? I think the PGID is the PID of the init.d script.

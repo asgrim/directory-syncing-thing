@@ -14,13 +14,23 @@
 # See LICENSE file for license!     
 #
 
-# Configure OUR options
-source ./directory-syncing-thing.conf
+INSTALLDIR=/opt/directory-syncing-thing
+
+DSTCONFIG=/etc/directory-syncing-thing.conf
+if [ ! -f $DSTCONFIG ]
+then
+  echo "Config file in $DSTCONFIG not found..."
+  exit 78
+fi
+
+cd $INSTALLDIR
+
+source /etc/directory-syncing-thing.conf
 
 # Don't need to change anything below here hopefully
-LOGSDIR=$DSTBASEDIR/logs
-LOCKFILE=$DSTBASEDIR/sync.lock
-PIDSDIR=$DSTBASEDIR/pids
+LOGSDIR=$INSTALLDIR/logs
+LOCKFILE=$INSTALLDIR/sync.lock
+PIDSDIR=$INSTALLDIR/pids
 
 # PATH=/sbin:/usr/sbin:/bin:/usr/bin
 # KERNEL="$(uname -s)"
@@ -49,7 +59,7 @@ do_start() {
     LOGFILE=$LOGSDIR/$iNAME.log
     :>$LOGFILE
 
-    (./watch_folder.sh $iLOCAL $iREMOTE $iNAME >> $LOGFILE 2>&1) &
+    ($INSTALLDIR/watch_folder.sh $iLOCAL $iREMOTE $iNAME >> $LOGFILE 2>&1) &
     MY_PPID=$!
 
     echo "Started watching $iNAME."
