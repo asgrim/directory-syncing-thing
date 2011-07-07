@@ -106,6 +106,46 @@ do_stop() {
    return 0
 }
 
+do_status() {
+
+  if [ -f $LOCKFILE ]
+  then
+    echo "Running."
+    for WATCHID in ${!WATCHDIRS_N[*]}
+    do
+      PIDFILE=$PIDSDIR/$WATCHID.pid
+      if [ -f $PIDFILE ]
+      then
+        MY_PPID=`cat $PIDFILE`
+
+        echo -ne "${WATCHDIRS_N[$WATCHID]} pids: "
+ 
+        PIDCOUNT=0
+        for i in `ps -ef | awk '$3 == '${MY_PPID}' { print $2 }'`
+        do
+          echo -ne " $i "
+          PIDCOUNT=`expr $PIDCOUNT + 1`
+        done
+
+        if [ $PIDCOUNT -eq 0 ]
+        then
+          echo " no pids - not running "
+        elif [ $PIDCOUNT -eq 1 ]
+        then
+          echo " (probably unison syncing) "
+        elif [ $PIDCOUNT -eq 2 ]
+        then
+          echo " (probably running ok) "
+        else
+          echo " ($PIDCOUNT processes, huh?) "
+        fi
+      fi
+    done
+  else
+    echo "Not running."
+  fi
+}
+
 case "$1" in
   start)
     echo -n "Starting $DESC $NAME"
@@ -138,8 +178,11 @@ case "$1" in
       *) log_failure_message ;;
     esac
     ;;
+  status)
+    do_status
+    ;;
   *)
-    log_warning_msg "Usage: $SCRIPTNAME [start|stop|restart|force-reload]" >&2
+    log_warning_msg "Usage: $SCRIPTNAME [start|stop|restart|force-reload|status]" >&2
     exit 3
     ;;
 esac
