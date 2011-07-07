@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 ### BEGIN INIT INFO
 # Provides:          directory-syncing-thing
 # Required-Start:    $remote_fs $all
