@@ -37,10 +37,6 @@ Usage
 
      -= YOU HAVE BEEN WARNED =-
 
-TODO
+TODO & ISSUES
 =================================================
-* Test the init.d script to see if it actually works as an init.d script
-* Do a check to see if the remote volume is mounted first
-* Improve the way the config works, it's ugly and difficult to understand
-* Enable changing configs WHILST script is running so it doesn't bork things
-* Could we use the PGID (process group ID) to kill all the child processes? I think the PGID is the PID of the init.d script.
+Moved to: https://github.com/Asgrim/Directory-Syncing-Thing/issues
