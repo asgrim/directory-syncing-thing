@@ -84,10 +84,10 @@ do_stop() {
  
        for i in `ps -ef | awk '$3 == '${MY_PPID}' { print $2 }'`
        do
-         kill -9 $i
+         kill -9 $i > /dev/null 2>&1
        done
   
-       kill -9 $MY_PPID
+       kill -9 $MY_PPID > /dev/null 2>&1
        rm -f $PIDFILE
        echo "done." >> $MASTERLOG
      else
