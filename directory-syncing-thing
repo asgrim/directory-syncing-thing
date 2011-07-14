@@ -43,6 +43,13 @@ RELEASE="$(uname -r)"
 . /lib/lsb/init-functions
 
 do_start() {
+  # Check we are allowed to start - specify in config!
+  if [ "$ENABLE_DST" != "Yes" ]
+  then
+    echo "Directory syncing thing not enabled. Set ENABLE_DST=Yes in config." >> $MASTERLOG
+    exit 3
+  fi
+
   # Check if lockfile exists
   if [ -f $LOCKFILE ];
   then
