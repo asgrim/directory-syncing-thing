@@ -1,0 +1,2 @@
+CONFIGFILE=/etc/directory-syncing-thing.conf
+INITSCRIPT=/etc/init.d/directory-syncing-thing
