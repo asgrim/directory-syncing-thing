@@ -7,6 +7,11 @@
 
 CONFIGFILE=/etc/directory-syncing-thing.conf
 INITSCRIPT=/etc/init.d/directory-syncing-thing
+if [ $UID != 0 ]
+then
+  echo "This script must be run as root."
+  exit 1
+fi
 
 if [ -f $CONFIGFILE ]
 then
