@@ -29,3 +29,13 @@ else
   echo "Softlink directory-syncing-thing in the init.d directory"
   ln -s /opt/directory-syncing-thing/directory-syncing-thing $INITSCRIPT
 fi
+
+echo -n "Would you like to add to startup (y/n) : "
+read ADDSTART
+
+if [ "$ADDSTART" == "y" ]
+then
+  update-rc.d directory-syncing-thing defaults
+fi
+
+echo "Install complete."
