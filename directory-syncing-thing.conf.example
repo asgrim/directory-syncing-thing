@@ -13,7 +13,7 @@
 # It will probably not close everything properly so you'll be screwed.
 # 
 
-# These LOCALDIR and REMOTEDIR do not have to be defined but are useful to stop repeating below
+# Previously these did not have to be declared, but now REMOTEDIR is used for waiting for remote mount point
 LOCALDIR=/path/to/local/dir/and/scripts/etc
 REMOTEDIR=/path/to/remote/dir
 
@@ -26,4 +26,11 @@ WATCHDIRS_R[1]=$REMOTEDIR/remotedir2
 WATCHDIRS_N[0]=name1
 WATCHDIRS_N[1]=name2
 
+# Must be specified as yes to enable directory-syncing-things
 ENABLE_DST=Yes
+
+# Should we wait for $REMOTEDIR to appear in /proc/mount ?
+WAITFORREMOTEMOUNT=No
+
+# Should we run unison initially to bring changes up to date? (recommended)
+UNISONINITIALSYNC=Yes
