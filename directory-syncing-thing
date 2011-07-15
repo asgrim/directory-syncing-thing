@@ -25,7 +25,7 @@ fi
 
 cd $INSTALLDIR
 
-source /etc/directory-syncing-thing.conf
+source $DSTCONFIG
 
 # Don't need to change anything below here hopefully
 LOGSDIR=$INSTALLDIR/logs
