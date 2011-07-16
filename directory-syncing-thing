@@ -151,7 +151,7 @@ do_status() {
           echo " no pids - not running "
         elif [ $PIDCOUNT -eq 1 ]
         then
-          echo " (probably unison syncing) "
+          echo " (probably unison syncing, or waiting for mount, not sure which) "
         elif [ $PIDCOUNT -eq 2 ]
         then
           echo " (probably running ok) "
