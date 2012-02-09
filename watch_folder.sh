@@ -53,6 +53,7 @@ do
 
 	case $ACTION in
 		'MODIFY' | 'MOVED_TO' | 'CREATE')
+			mkdir -p $(dirname $SYNC_REMOTE_DIR/$FILECHANGED)
 			cp $SYNC_LOCAL_DIR/$FILECHANGED $SYNC_REMOTE_DIR/$FILECHANGED
 			echo "Copied $SYNC_LOCAL_DIR/$FILECHANGED to $SYNC_REMOTE_DIR/$FILECHANGED"
 			;;
@@ -64,9 +65,13 @@ do
 			mkdir $SYNC_REMOTE_DIR/$FILECHANGED
 			echo "Created $SYNC_REMOTE_DIR/$FILECHANGED directory"
 			;;
-		'DELETE,ISDIR')
+		'DELETE,ISDIR' | 'MOVED_FROM,ISDIR')
 			rm -Rf $SYNC_REMOTE_DIR/$FILECHANGED
 			echo "Deleted $SYNC_REMOTE_DIR/$FILECHANGED"
+			;;
+		'MOVED_TO,ISDIR')
+			cp -af $SYNC_LOCAL_DIR/$FILECHANGED $SYNC_REMOTE_DIR/$FILECHANGED
+			echo "Copy directory $SYNC_REMOTE_DIR/$FILECHANGED"
 			;;
 		*)
 			echo "Action [$ACTION] not supported yet."
