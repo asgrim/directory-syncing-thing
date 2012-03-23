@@ -18,17 +18,16 @@ source /etc/directory-syncing-thing.conf
 
 if [ "$WAITFORREMOTEMOUNT" == "Yes" ]
 then
-  MOUNTED=false
   echo -ne "Waiting for mount [$REMOTEDIR] to become available.."
 
-  while [ $MOUNTED != "true" ]
+  while true
   do
-    echo -ne "."
-    sleep 10
     if grep -q "[[:space:]]$REMOTEDIR[[:space:]]" /proc/mounts
     then
-      MOUNTED=true
+      break
     fi
+    echo -ne "."
+    sleep 10
   done
   echo "Mounted"
 fi
