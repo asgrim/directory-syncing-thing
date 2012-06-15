@@ -45,32 +45,32 @@ while read ACTION WATCH FILE
 do
 	FILECHANGED="${WATCH#$CURPATH/}${FILE}"
 
-	echo -ne "$LABEL [$ACTION $FILECHANGED] "
+	echo -e "$LABEL [$ACTION $FILECHANGED]"
 
 	case $ACTION in
 		'MODIFY' | 'MOVED_TO' | 'CREATE')
 			mkdir -p $SYNC_REMOTE_DIR/${FILECHANGED%/*}
 			cp $SYNC_LOCAL_DIR/$FILECHANGED $SYNC_REMOTE_DIR/$FILECHANGED
-			echo "Copied $SYNC_LOCAL_DIR/$FILECHANGED to $SYNC_REMOTE_DIR/$FILECHANGED"
+			echo -e "  Copied\n    $SYNC_LOCAL_DIR/$FILECHANGED\n    $SYNC_REMOTE_DIR/$FILECHANGED"
 			;;
 		'DELETE' | 'MOVED_FROM')
 			rm $SYNC_REMOTE_DIR/$FILECHANGED
-			echo "Removed $SYNC_REMOTE_DIR/$FILECHANGED"
+			echo -e "  Removed\n    $SYNC_REMOTE_DIR/$FILECHANGED"
 			;;
 		'CREATE,ISDIR')
 			mkdir $SYNC_REMOTE_DIR/$FILECHANGED
-			echo "Created $SYNC_REMOTE_DIR/$FILECHANGED directory"
+			echo -e "  Create directory\n    $SYNC_REMOTE_DIR/$FILECHANGED"
 			;;
 		'DELETE,ISDIR' | 'MOVED_FROM,ISDIR')
 			rm -Rf $SYNC_REMOTE_DIR/$FILECHANGED
-			echo "Deleted $SYNC_REMOTE_DIR/$FILECHANGED"
+			echo -e "  Delete directory\n    $SYNC_REMOTE_DIR/$FILECHANGED"
 			;;
 		'MOVED_TO,ISDIR')
 			cp -af $SYNC_LOCAL_DIR/$FILECHANGED $SYNC_REMOTE_DIR/$FILECHANGED
-			echo "Copy directory $SYNC_REMOTE_DIR/$FILECHANGED"
+			echo -e "  Copy directory $SYNC_REMOTE_DIR/$FILECHANGED"
 			;;
 		*)
-			echo "Action [$ACTION] not supported yet."
+			echo "  Action [$ACTION] not supported yet."
 			;;
 	esac
 done
