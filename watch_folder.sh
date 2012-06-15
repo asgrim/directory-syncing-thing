@@ -18,17 +18,16 @@ source /etc/directory-syncing-thing.conf
 
 if [ "$WAITFORREMOTEMOUNT" == "Yes" ]
 then
-  MOUNTED=false
   echo -ne "Waiting for mount [$REMOTEDIR] to become available.."
 
-  while [ $MOUNTED != "true" ]
+  while true
   do
-    echo -ne "."
-    sleep 10
     if grep -q "[[:space:]]$REMOTEDIR[[:space:]]" /proc/mounts
     then
-      MOUNTED=true
+      break
     fi
+    echo -ne "."
+    sleep 10
   done
   echo "Mounted"
 fi
@@ -40,20 +39,17 @@ then
   echo "done"
 fi
 
-inotifywait -rm --exclude '.tmp$' --exclude '.lock$' --format "%e:%w:%f" $SYNC_LOCAL_DIR -e MODIFY,MOVE,CREATE,DELETE | while read FILE
+IFS=':'
+inotifywait -rm --exclude '.tmp$' --exclude '.lock$' --format "%e:%w:%f" $SYNC_LOCAL_DIR -e MODIFY,MOVE,CREATE,DELETE | \
+while read ACTION WATCH FILE
 do
-	BITS=(`echo $FILE | tr ':' '\n'`)
-	ACTION=${BITS[0]}
-	WATCH=${BITS[1]}
-	FILE=${BITS[2]}
-
-	FILECHANGED=`echo "${WATCH}${FILE}" | sed 's_'$CURPATH'/__'`
+	FILECHANGED="${WATCH#$CURPATH/}${FILE}"
 
 	echo -ne "$LABEL [$ACTION $FILECHANGED] "
 
 	case $ACTION in
 		'MODIFY' | 'MOVED_TO' | 'CREATE')
-			mkdir -p $(dirname $SYNC_REMOTE_DIR/$FILECHANGED)
+			mkdir -p $SYNC_REMOTE_DIR/${FILECHANGED%/*}
 			cp $SYNC_LOCAL_DIR/$FILECHANGED $SYNC_REMOTE_DIR/$FILECHANGED
 			echo "Copied $SYNC_LOCAL_DIR/$FILECHANGED to $SYNC_REMOTE_DIR/$FILECHANGED"
 			;;
